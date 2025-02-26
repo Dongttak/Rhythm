@@ -453,8 +453,8 @@ MonoBehaviour:
   switchSettingsMigration: 1
   HasSourceProject: 1
   HasPlatforms: 1
-  sourceProjectPath: ../Library/Application Support/FMOD Studio/2.03.06/Examples/Examples.fspro
-  sourceBankPath: ../Library/Application Support/FMOD Studio/2.03.06/Examples/Build
+  sourceProjectPath: ../Library/Application Support/FMOD Studio/2.03.06/BackGround/BackGround.fspro
+  sourceBankPath: ../Library/Application Support/FMOD Studio/2.03.06/BackGround/Build
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -475,7 +475,8 @@ MonoBehaviour:
   VirtualChannelSettings: []
   RealChannelSettings: []
   Plugins: []
-  MasterBanks: []
+  MasterBanks:
+  - Master
   Banks: []
   BanksToLoad: []
   LiveUpdatePort: 9264
@@ -488,7 +489,7 @@ MonoBehaviour:
   EnableErrorCallback: 0
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
-  CurrentVersion: 131623
+  CurrentVersion: 131846
   HideSetupWizard: 1
   LastEventReferenceScanVersion: 131623
   Platforms:
