@@ -13,7 +13,7 @@ public class OsuParser : MonoBehaviour
         Debug.Log($"Loaded osu! map: {mapData.title} by {mapData.artist}");
     }
 
-    OsuMapData ParseOsuFile(string fileContent)
+    public OsuMapData ParseOsuFile(string fileContent)
     {
         OsuMapData map = new OsuMapData();
         map.hitObjects = new List<OsuHitObject>();
