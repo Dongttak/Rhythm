@@ -1,53 +1,60 @@
-using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
+using UnityEngine;
 
-public class OsuParser : MonoBehaviour
+public class OsuHitObject
 {
-    public TextAsset osuFile; // Unity에 `.osu` 파일 추가
-    public OsuMapData mapData;
+    public float x;     // 노트의 X 위치
+    public float y;     // 노트의 Y 위치
+    public float time;  // 노트가 떨어지는 타이밍 (ms)
 
-    void Start()
+    public OsuHitObject(float x, float y, float time)
     {
-        mapData = ParseOsuFile(osuFile.text);
-        Debug.Log($"Loaded osu! map: {mapData.title} by {mapData.artist}");
+        this.x = x;
+        this.y = y;
+        this.time = time;
     }
+}
 
-    public OsuMapData ParseOsuFile(string fileContent)
+public class OsuParser
+{
+    public static List<OsuHitObject> ParseOsuFile(string osuFilePath)
     {
-        OsuMapData map = new OsuMapData();
-        map.hitObjects = new List<OsuHitObject>();
+        List<OsuHitObject> hitObjects = new List<OsuHitObject>();
 
-        string[] lines = fileContent.Split('\n');
-        bool hitObjectSection = false;
+        if (!File.Exists(osuFilePath))
+        {
+            Debug.LogError("파일을 찾을 수 없습니다: " + osuFilePath);
+            return hitObjects;
+        }
+
+        string[] lines = File.ReadAllLines(osuFilePath);
+        bool hitObjectsSection = false;
 
         foreach (string line in lines)
         {
-            if (line.StartsWith("[Metadata]"))
-                continue;
-            if (line.StartsWith("[HitObjects]"))
+            if (line.StartsWith("[HitObjects]")) // 🎯 HitObjects 섹션 시작
             {
-                hitObjectSection = true;
+                hitObjectsSection = true;
                 continue;
             }
 
-            if (hitObjectSection)
+            if (hitObjectsSection && !string.IsNullOrWhiteSpace(line))
             {
                 string[] parts = line.Split(',');
-                if (parts.Length < 3) continue;
 
-                OsuHitObject hitObject = new OsuHitObject
+                if (parts.Length >= 3)
                 {
-                    x = int.Parse(parts[0]),
-                    y = int.Parse(parts[1]),
-                    time = int.Parse(parts[2]),
-                    type = int.Parse(parts[3])
-                };
+                    float x = float.Parse(parts[0]);    // X 좌표
+                    float y = float.Parse(parts[1]);    // Y 좌표
+                    float time = float.Parse(parts[2]); // 타이밍 (ms)
 
-                map.hitObjects.Add(hitObject);
+                    hitObjects.Add(new OsuHitObject(x, y, time));
+                }
             }
         }
 
-        return map;
+        Debug.Log("총 " + hitObjects.Count + "개의 노트를 파싱했습니다.");
+        return hitObjects;
     }
 }
