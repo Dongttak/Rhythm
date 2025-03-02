@@ -2,34 +2,41 @@ using UnityEngine;
 using System.Collections.Generic;
 public class NoteManager : MonoBehaviour
 {
-    public NoteSpawner noteSpawner; 
-    public List<OsuHitObject> hitObjects; // osu 파일에서 파싱된 데이터
-    private int nextNoteIndex = 0;
+    public float timingOffset = 0f;
+    public NoteSpawner noteSpawner; //NoteSpawner 추가
+    public string osuFilePath;
+    public List<OsuHitObject> hitObjects;
     private float startTime;
+    private int nextNoteIndex = 0;
 
     void Start()
     {
+        
+        hitObjects = OsuParser.ParseOsuFile(osuFilePath);
+
         if (hitObjects == null || hitObjects.Count == 0)
         {
-            Debug.LogError("hitObjects가 null이거나 비어 있습니다!");
+            Debug.LogError("OsuParser에서 hitObjects를 가져오지 못했습니다!");
             return;
         }
-    
-        startTime = Time.time;
+
+        startTime = SoundController.instance.GetMusicStartTime();
     }
 
     void Update()
     {
-        if (nextNoteIndex >= hitObjects.Count) return; // 모든 노트 생성 완료
+        if (nextNoteIndex >= hitObjects.Count) return;
 
         float currentTime = (Time.time - startTime) * 1000f; // 경과 시간(ms 단위)
-
+        
+        Debug.Log($"음악 진행 시간: {currentTime}ms, 다음 노트 시간: {hitObjects[nextNoteIndex].time}ms");
+        
         while (nextNoteIndex < hitObjects.Count && hitObjects[nextNoteIndex].time <= currentTime)
         {
             OsuHitObject hitObject = hitObjects[nextNoteIndex];
             int lane = ConvertToLane(hitObject.x);
             noteSpawner.SpawnNote(hitObject, lane);
-            nextNoteIndex++; // 다음 노트로 이동
+            nextNoteIndex++;
         }
     }
 

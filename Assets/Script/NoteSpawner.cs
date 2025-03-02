@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class NoteSpawner : MonoBehaviour
 {
-    
-    public Transform[] spawnPoints; // 4개의 스폰 포인트를 저장할 배열
-    public GameObject[] notePrefabs;
+    public Transform[] spawnPoints; // 4개의 스폰 포인트
+    public GameObject[] notePrefabs; // 4개의 노트 프리팹
     public float noteSpeed = 5f;
 
     public void SpawnNote(OsuHitObject hitObject, int lane)
@@ -17,21 +16,21 @@ public class NoteSpawner : MonoBehaviour
             return;
         }
 
-        if (lane < 0 || lane >= spawnPoints.Length)
+        if (lane < 0 || lane >= spawnPoints.Length || lane >= notePrefabs.Length)
         {
             Debug.LogError($"잘못된 Lane 값: {lane}");
             return;
         }
 
-        Transform spawnPoint = spawnPoints[lane]; // 해당 Lane의 스폰 위치 가져오기
-        GameObject notePrefab = notePrefabs[lane]; //prefab 여러개 작성하기
-        
+        Transform spawnPoint = spawnPoints[lane];
+        GameObject notePrefab = notePrefabs[lane];
+
         GameObject note = Instantiate(notePrefab, spawnPoint.position, Quaternion.identity);
         NoteController controller = note.GetComponent<NoteController>();
 
         if (controller != null)
         {
-            controller.SetTarget(hitObject.x, hitObject.y, noteSpeed);
+            controller.speed = noteSpeed; //노트 속도 설정
         }
         else
         {
