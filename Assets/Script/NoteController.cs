@@ -8,7 +8,7 @@ public class NoteController : MonoBehaviour
     {
         transform.position += Vector3.down * speed * Time.deltaTime; //일정한 속도로 이동
 
-        if (transform.position.y < -5f)
+        if (transform.position.y < -3f)
         {
             Destroy(gameObject);
         }
